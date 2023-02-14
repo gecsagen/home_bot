@@ -1,0 +1,12 @@
+[Unit]
+Description=bot daemon
+After=network.target
+
+[Service]
+User=root
+Group=www-data
+WorkingDirectory=/root/home_bot
+ExecStart=/root/home_bot/bot.sh
+
+[Install]
+WantedBy=multi-user.target
