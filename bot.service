@@ -6,7 +6,6 @@ After=network.target
 User=root
 Group=www-data
 WorkingDirectory=/root/home_bot
-ExecStart=/root/home_bot/bot.sh
-
+ExecStart=/root/home_bot/start.sh
 [Install]
 WantedBy=multi-user.target
