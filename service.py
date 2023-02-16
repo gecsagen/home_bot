@@ -2,32 +2,29 @@ import asyncio
 from datetime import timedelta
 
 
-async def is_valid_time(time: str):
-    time_parts = time.split(":")
-    if len(time_parts) != 2:
+async def is_valid_time(time: str) -> tuple[int, int] | bool:
+    """Валидация времени"""
+    try:
+        hours, minutes = map(int, time.split(":"))
+    except ValueError:
         return False
 
-    hours, minutes = time_parts
-    if not hours.isdigit() or not minutes.isdigit():
-        return False
-
-    hours = int(hours)
-    minutes = int(minutes)
-    if hours < 6 or hours > 11:
-        return False
-    if minutes < 0 or minutes > 59:
+    if not (6 <= hours <= 11) or not (0 <= minutes <= 59):
         return False
 
     return hours, minutes
 
 
 async def add_time(time: str) -> timedelta | bool:
+    """Вычисляет время ухода с работы домой"""
     is_valid = await is_valid_time(time)
     if is_valid:
-        tm3 = timedelta(hours=is_valid[0], minutes=is_valid[1])
-        tm4 = timedelta(hours=8, minutes=45)
-        sum1 = str(tm3 + tm4).split(":")
-        return f"{sum1[0]}:{sum1[1]}"
+        arrival_time = timedelta(hours=is_valid[0], minutes=is_valid[1])
+        working_hours = timedelta(hours=8, minutes=45)
+        result = arrival_time + working_hours
+        return "{:02d}:{:02d}".format(
+            result.seconds // 3600, (result.seconds // 60) % 60
+        )
     else:
         return False
 
